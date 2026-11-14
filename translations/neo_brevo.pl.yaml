@@ -1,0 +1,12 @@
+# Default texts of the newsletter sign-up (Polish). The module's fields override
+# them.
+form:
+    email_label: 'Adres e-mail'
+    button: 'Zapisz się'
+    lists_legend: 'Proszę wybrać listę(-y)'
+    list_label: 'Lista'
+    success: 'Prawie gotowe — prosimy potwierdzić subskrypcję, klikając link w wiadomości e-mail, którą właśnie wysłaliśmy.'
+    error_generic: 'Coś poszło nie tak. Prosimy spróbować ponownie później.'
+    error_invalid: 'Prosimy podać prawidłowy adres e-mail.'
+    error_limit: 'Zbyt wiele prób. Prosimy spróbować ponownie za kilka minut.'
+    error_choose: 'Prosimy wybrać co najmniej jedną listę.'

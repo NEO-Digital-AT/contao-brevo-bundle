@@ -1,0 +1,11 @@
+# Default texts of the newsletter sign-up (French). The module's fields override them.
+form:
+    email_label: 'Adresse e-mail'
+    button: 'S’inscrire'
+    lists_legend: 'Choisissez votre ou vos liste(s)'
+    list_label: 'Liste'
+    success: 'Presque terminé — veuillez confirmer votre inscription grâce à l’e-mail que nous venons de vous envoyer.'
+    error_generic: 'Une erreur s’est produite. Veuillez réessayer plus tard.'
+    error_invalid: 'Veuillez saisir une adresse e-mail valide.'
+    error_limit: 'Trop de tentatives. Veuillez réessayer dans quelques minutes.'
+    error_choose: 'Veuillez choisir au moins une liste.'

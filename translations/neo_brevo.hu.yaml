@@ -1,0 +1,13 @@
+# Default texts of the newsletter sign-up (Hungarian). The module's fields override
+# them. For further languages add neo_brevo.<language>.yaml to your project's
+# translations/ folder.
+form:
+    email_label: 'E-mail-cím'
+    button: 'Feliratkozás'
+    lists_legend: 'Válassza ki a listá(ka)t'
+    list_label: 'Lista'
+    success: 'Már majdnem kész — kérjük, erősítse meg feliratkozását az imént küldött e-mailben.'
+    error_generic: 'Valami hiba történt. Kérjük, próbálja újra később.'
+    error_invalid: 'Kérjük, adjon meg egy érvényes e-mail-címet.'
+    error_limit: 'Túl sok próbálkozás. Kérjük, néhány perc múlva próbálja újra.'
+    error_choose: 'Kérjük, válasszon legalább egy listát.'

@@ -1,0 +1,13 @@
+# Zadani tekstovi prijave na newsletter (hrvatski). Polja modula ih nadjačavaju.
+# Za dodatne jezike dodajte neo_brevo.<jezik>.yaml u mapu translations/ svojeg
+# projekta.
+form:
+    email_label: 'E-mail adresa'
+    button: 'Prijavi se'
+    lists_legend: 'Odaberite popis(e)'
+    list_label: 'Popis'
+    success: 'Gotovo je — potvrdite prijavu putem e-maila koji smo vam upravo poslali.'
+    error_generic: 'Nešto je pošlo po zlu. Pokušajte ponovno kasnije.'
+    error_invalid: 'Unesite valjanu e-mail adresu.'
+    error_limit: 'Previše pokušaja. Pokušajte ponovno za nekoliko minuta.'
+    error_choose: 'Odaberite barem jedan popis.'

@@ -1,0 +1,13 @@
+# Default texts of the newsletter sign-up (Spanish). The module's fields override
+# them. For further languages add neo_brevo.<language>.yaml to your project's
+# translations/ folder.
+form:
+    email_label: 'Dirección de correo electrónico'
+    button: 'Suscribirse'
+    lists_legend: 'Elija su(s) lista(s)'
+    list_label: 'Lista'
+    success: 'Ya casi está: confirme su suscripción con el correo que acabamos de enviarle.'
+    error_generic: 'Algo ha fallado. Inténtelo de nuevo más tarde.'
+    error_invalid: 'Introduzca una dirección de correo electrónico válida.'
+    error_limit: 'Demasiados intentos. Inténtelo de nuevo dentro de unos minutos.'
+    error_choose: 'Elija al menos una lista.'

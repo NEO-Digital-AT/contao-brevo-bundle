@@ -1,0 +1,78 @@
+{
+    "name": "neo-digital/contao-brevo-bundle",
+    "type": "contao-bundle",
+    "description": "Brevo newsletter sign-up for Contao 5: a front-end module and a form-generator opt-in field with Brevo double opt-in, live list selection, encrypted API key, rate limit and honeypot. Ships a neutral design that each site themes itself.",
+    "keywords": [
+        "contao",
+        "contao-bundle",
+        "brevo",
+        "sendinblue",
+        "newsletter",
+        "double-opt-in",
+        "gdpr"
+    ],
+    "homepage": "https://github.com/NEO-Digital-AT/contao-brevo-bundle",
+    "license": "proprietary",
+    "authors": [
+        {
+            "name": "NEO Digital",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/NEO-Digital-AT/contao-brevo-bundle/issues",
+        "source": "https://github.com/NEO-Digital-AT/contao-brevo-bundle"
+    },
+    "require": {
+        "php": "^8.2",
+        "contao/core-bundle": "^5.3 || ^6.0",
+        "doctrine/dbal": "^3.6 || ^4.0",
+        "neo-digital/contao-basic-bundle": "^1.0",
+        "psr/cache": "^1.0 || ^2.0 || ^3.0",
+        "psr/log": "^1.1 || ^2.0 || ^3.0",
+        "symfony/config": "^6.4 || ^7.0 || ^8.0",
+        "symfony/dependency-injection": "^6.4 || ^7.0 || ^8.0",
+        "symfony/framework-bundle": "^6.4 || ^7.0 || ^8.0",
+        "symfony/http-client": "^6.4 || ^7.0 || ^8.0",
+        "symfony/http-client-contracts": "^3.0",
+        "symfony/http-foundation": "^6.4 || ^7.0 || ^8.0",
+        "symfony/http-kernel": "^6.4 || ^7.0 || ^8.0",
+        "symfony/rate-limiter": "^6.4 || ^7.0 || ^8.0",
+        "symfony/routing": "^6.4 || ^7.0 || ^8.0",
+        "symfony/translation-contracts": "^3.0"
+    },
+    "require-dev": {
+        "ext-pdo_sqlite": "*",
+        "contao/manager-plugin": "^2.0",
+        "phpunit/phpunit": "^10.5 || ^11.5"
+    },
+    "conflict": {
+        "contao/manager-plugin": "<2.0 || >=3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Neo\\BrevoNewsletterBundle\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Neo\\BrevoNewsletterBundle\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "phpunit"
+    },
+    "config": {
+        "allow-plugins": {
+            "contao-components/installer": false,
+            "contao/manager-plugin": false,
+            "php-http/discovery": false
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "1.0.x-dev"
+        },
+        "contao-manager-plugin": "Neo\\BrevoNewsletterBundle\\ContaoManager\\Plugin"
+    }
+}

@@ -1,0 +1,13 @@
+# Default texts of the newsletter sign-up (Dutch). The module's fields override
+# them. For further languages add neo_brevo.<language>.yaml to your project's
+# translations/ folder.
+form:
+    email_label: 'E-mailadres'
+    button: 'Aanmelden'
+    lists_legend: 'Kies uw lijst(en)'
+    list_label: 'Lijst'
+    success: 'Bijna klaar — bevestig uw aanmelding via de e-mail die we u zojuist hebben gestuurd.'
+    error_generic: 'Er ging iets mis. Probeer het later opnieuw.'
+    error_invalid: 'Vul een geldig e-mailadres in.'
+    error_limit: 'Te veel pogingen. Probeer het over een paar minuten opnieuw.'
+    error_choose: 'Kies ten minste één lijst.'

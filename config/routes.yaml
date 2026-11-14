@@ -1,0 +1,6 @@
+neo_brevo_subscribe:
+    path: /api/brevo/subscribe
+    methods: [POST]
+    defaults:
+        _controller: Neo\BrevoNewsletterBundle\Controller\SubscribeController::subscribe
+        _scope: frontend

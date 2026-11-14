@@ -1,0 +1,13 @@
+# Standardtexte der Newsletter-Anmeldung (Deutsch). Felder am Modul überschreiben
+# sie. Für weitere Sprachen neo_brevo.<sprache>.yaml im Projekt-Ordner
+# translations/ anlegen.
+form:
+    email_label: 'E-Mail-Adresse'
+    button: 'Anmelden'
+    lists_legend: 'Verteiler wählen'
+    list_label: 'Verteiler'
+    success: 'Fast geschafft – bitte bestätigen Sie Ihre Anmeldung über die E-Mail, die wir Ihnen gerade geschickt haben.'
+    error_generic: 'Etwas ist schiefgelaufen. Bitte versuchen Sie es später erneut.'
+    error_invalid: 'Bitte geben Sie eine gültige E-Mail-Adresse ein.'
+    error_limit: 'Zu viele Versuche. Bitte probieren Sie es in ein paar Minuten erneut.'
+    error_choose: 'Bitte wählen Sie mindestens eine Liste.'

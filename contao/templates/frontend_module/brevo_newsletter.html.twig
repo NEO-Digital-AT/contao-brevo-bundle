@@ -1,0 +1,54 @@
+{% extends "@Contao/frontend_module/_base.html.twig" %}
+
+{# NEO Brevo Newsletter sign-up (frontend module). Default markup — override in
+   the project's templates/ to restyle. All copy comes from editable back-end
+   fields; the form posts to the subscribe endpoint (JSON via JS, redirect fallback). #}
+{% block inner %}
+<div class="brevo-nl{{ configured ? '' : ' brevo-nl--unconfigured' }}">
+  {% if headline %}<{{ headlineTag }} class="brevo-nl__title">{{ headline }}</{{ headlineTag }}>{% endif %}
+  {% if intro %}<p class="brevo-nl__intro">{{ intro|nl2br }}</p>{% endif %}
+
+  <form class="brevo-nl__form" method="post" action="{{ endpoint }}" data-brevo-form novalidate>
+    <input type="hidden" name="mod" value="{{ modId }}">
+
+    {# Honeypot — kept out of the layout and away from assistive tech. #}
+    <div class="brevo-nl__hp" aria-hidden="true">
+      <label>Website<input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+    </div>
+
+    <div class="brevo-nl__row">
+      <label class="brevo-nl__label" for="brevo-email-{{ modId }}">{{ emailLabel }}</label>
+      <input class="brevo-nl__input" type="email" id="brevo-email-{{ modId }}" name="email"
+             required autocomplete="email" placeholder="{{ emailLabel }}">
+    </div>
+
+    {% if mode == 'choice' and lists %}
+    <fieldset class="brevo-nl__lists">
+      <legend class="brevo-nl__label">{{ listsLegend }}</legend>
+      {% if choiceType == 'multiple' %}
+        {% for o in lists %}
+        <label class="brevo-nl__check">
+          <input type="checkbox" name="lists[]" value="{{ o.id }}"><span>{{ o.label }}</span>
+        </label>
+        {% endfor %}
+      {% else %}
+        <select class="brevo-nl__input" id="brevo-list-{{ modId }}" name="lists" aria-label="{{ listLabel }}">
+          {% for o in lists %}<option value="{{ o.id }}">{{ o.label }}</option>{% endfor %}
+        </select>
+      {% endif %}
+    </fieldset>
+    {% endif %}
+
+    <label class="brevo-nl__consent">
+      <input type="checkbox" name="consent" value="1" required>
+      <span>{{ consent|raw }}</span>
+    </label>
+
+    <button class="brevo-nl__btn" type="submit">{{ button }}</button>
+
+    <p class="brevo-nl__msg" role="status" aria-live="polite"
+       data-success="{{ success }}" data-generic="{{ genericError }}" data-choose="{{ chooseError }}"
+       data-invalid="{{ invalidError }}" data-limit="{{ limitError }}"></p>
+  </form>
+</div>
+{% endblock %}

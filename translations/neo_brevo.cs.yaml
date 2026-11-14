@@ -1,0 +1,13 @@
+# Default texts of the newsletter sign-up (Czech). The module's fields override
+# them. For further languages add neo_brevo.<language>.yaml to your project's
+# translations/ folder.
+form:
+    email_label: 'E-mailová adresa'
+    button: 'Přihlásit k odběru'
+    lists_legend: 'Vyberte seznam(y)'
+    list_label: 'Seznam'
+    success: 'Téměř hotovo — potvrďte prosím přihlášení v e-mailu, který jsme vám právě poslali.'
+    error_generic: 'Něco se pokazilo. Zkuste to prosím později.'
+    error_invalid: 'Zadejte prosím platnou e-mailovou adresu.'
+    error_limit: 'Příliš mnoho pokusů. Zkuste to prosím znovu za několik minut.'
+    error_choose: 'Vyberte prosím alespoň jeden seznam.'

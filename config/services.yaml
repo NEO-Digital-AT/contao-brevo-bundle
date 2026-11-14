@@ -1,0 +1,54 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    Neo\BrevoNewsletterBundle\:
+        resource: ../src/
+        exclude:
+            - ../src/DependencyInjection/
+            - ../src/ContaoManager/
+            - ../src/NeoBrevoNewsletterBundle.php
+            - ../src/Model/
+            # Contao instantiates form generator widgets itself (TL_FFL).
+            - ../src/Widget/
+
+    # Dedicated HTTP client for Brevo calls (short timeouts so a slow API never
+    # blocks a page render or a back-end edit screen).
+    neo_brevo_newsletter.http_client:
+        class: Symfony\Contracts\HttpClient\HttpClientInterface
+        factory: ['Symfony\Component\HttpClient\HttpClient', 'create']
+        arguments:
+            - { timeout: 8, max_duration: 15 }
+
+    # Public so the options_callbacks of tl_module and tl_form_field can fetch the live Brevo lists.
+    Neo\BrevoNewsletterBundle\Brevo\BrevoClient:
+        arguments:
+            $httpClient: '@neo_brevo_newsletter.http_client'
+        public: true
+
+    # Resolves the API key ("Access keys and licences" of the Basic bundle →
+    # BREVO_API_KEY env fallback). Public so the DCA options_callbacks and other
+    # bundles can use it.
+    Neo\BrevoNewsletterBundle\Brevo\ApiKeyResolver:
+        public: true
+
+    # Failed sign-ups also go to Contao's system log (System › System log), channel contao.error.
+    Neo\BrevoNewsletterBundle\Controller\SubscribeController:
+        arguments:
+            $contaoErrorLog: '@?monolog.logger.contao.error'
+
+    Neo\BrevoNewsletterBundle\EventListener\BrevoOptinFormListener:
+        arguments:
+            $contaoErrorLog: '@?monolog.logger.contao.error'
+
+    # DCA callbacks (resolved by class name from the container).
+    Neo\BrevoNewsletterBundle\Backend\ModuleCallbacks:
+        public: true
+
+    Neo\BrevoNewsletterBundle\Backend\KeyWarning:
+        public: true
+
+    # Lists and template without a key or answer from Brevo: disabled, the reason at the field.
+    Neo\BrevoNewsletterBundle\Backend\DependencyCallbacks:
+        public: true

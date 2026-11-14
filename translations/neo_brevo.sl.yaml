@@ -1,0 +1,11 @@
+# Default texts of the newsletter sign-up (Slovenian). The module's fields override them.
+form:
+    email_label: 'E-poštni naslov'
+    button: 'Prijava'
+    lists_legend: 'Izberite seznam(e)'
+    list_label: 'Seznam'
+    success: 'Skoraj končano – prosimo, potrdite prijavo prek e-pošte, ki smo vam jo pravkar poslali.'
+    error_generic: 'Prišlo je do napake. Prosimo, poskusite znova pozneje.'
+    error_invalid: 'Prosimo, vnesite veljaven e-poštni naslov.'
+    error_limit: 'Preveč poskusov. Prosimo, poskusite znova čez nekaj minut.'
+    error_choose: 'Prosimo, izberite vsaj en seznam.'

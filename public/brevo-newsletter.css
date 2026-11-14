@@ -1,0 +1,83 @@
+/* =========================================================================
+   Brevo Newsletter — sign-up form, neutral base styles.
+   Every colour, radius and font comes from the --bn-* custom properties below;
+   theme the form by overriding them on .brevo-nl in your own stylesheet, e.g.
+     .brevo-nl { --bn-accent:#0b6e4f; --bn-accent-dark:#085a40; --bn-radius:0; }
+   or override the template (frontend_module/brevo_newsletter). The defaults are
+   a light, brand-free look; text ≥ 4.5:1, controls ≥ 3:1 on white.
+   ========================================================================= */
+.brevo-nl {
+  --bn-accent: #1f2328;
+  --bn-accent-dark: #000000;
+  --bn-on-accent: #ffffff;
+  --bn-bg: #ffffff;
+  --bn-border: #818b98;
+  --bn-text: #1f2328;
+  --bn-muted: #59636e;
+  --bn-link: #0969da;
+  --bn-ok: #1a7f37;
+  --bn-err: #cf222e;
+  --bn-radius: 8px;
+  --bn-font: inherit;
+
+  font-family: var(--bn-font);
+  color: var(--bn-text);
+}
+.brevo-nl * { box-sizing: border-box; }
+
+.brevo-nl__title { margin: 0 0 .5rem; }
+.brevo-nl__intro { margin: 0 0 1rem; color: var(--bn-muted); }
+
+.brevo-nl__form { display: flex; flex-direction: column; gap: .85rem; max-width: 30rem; }
+
+.brevo-nl__row { display: flex; flex-direction: column; gap: .35rem; }
+.brevo-nl__label { font-size: .85rem; font-weight: 500; color: var(--bn-muted); }
+
+.brevo-nl__input {
+  width: 100%; min-height: 48px;
+  font: inherit; font-size: .95rem; color: var(--bn-text);
+  background: var(--bn-bg); border: 1px solid var(--bn-border);
+  border-radius: var(--bn-radius); padding: 10px 13px;
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+.brevo-nl__input:focus {
+  outline: none; border-color: var(--bn-accent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--bn-accent) 25%, transparent);
+}
+select.brevo-nl__input { cursor: pointer; }
+
+/* List selection (choice mode) */
+.brevo-nl__lists { display: flex; flex-direction: column; gap: .5rem; margin: 0; padding: 0; border: 0; }
+.brevo-nl__lists legend { padding: 0; margin-bottom: .15rem; }
+.brevo-nl__check { display: flex; align-items: center; gap: .55rem; font-size: .9rem; cursor: pointer; }
+
+/* Consent */
+.brevo-nl__consent { display: flex; align-items: flex-start; gap: .55rem; font-size: .85rem; line-height: 1.45; color: var(--bn-muted); cursor: pointer; }
+.brevo-nl__consent a { color: var(--bn-link); text-decoration: underline; }
+
+/* Native checkboxes adopt the brand accent (box + tick handled by the browser). */
+.brevo-nl__check input[type="checkbox"],
+.brevo-nl__consent input[type="checkbox"] { width: 18px; height: 18px; margin: 1px 0 0; accent-color: var(--bn-accent); flex: none; }
+
+.brevo-nl__btn {
+  align-self: flex-start;
+  min-height: 48px; padding: 0 1.4rem;
+  font: inherit; font-weight: 600; color: var(--bn-on-accent);
+  background: var(--bn-accent); border: 0; border-radius: var(--bn-radius);
+  cursor: pointer; transition: background-color .15s ease, transform .15s ease;
+}
+.brevo-nl__btn:hover { background: var(--bn-accent-dark); }
+.brevo-nl__btn:disabled { opacity: .6; cursor: default; }
+.brevo-nl__btn:focus-visible { outline: 3px solid color-mix(in srgb, var(--bn-accent) 45%, transparent); outline-offset: 2px; }
+
+/* Status message */
+.brevo-nl__msg { margin: 0; font-size: .88rem; min-height: 1.2em; }
+.brevo-nl__msg.is-ok { color: var(--bn-ok); }
+.brevo-nl__msg.is-err { color: var(--bn-err); }
+
+/* Honeypot — visually hidden, kept in the DOM for bots. */
+.brevo-nl__hp { position: absolute !important; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+
+@media (prefers-reduced-motion: reduce) {
+  .brevo-nl__input, .brevo-nl__btn { transition: none; }
+}
