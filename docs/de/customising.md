@@ -3,7 +3,7 @@ titel: Anpassen
 kurzfassung: Das Anmeldeformular von Contao Brevo Newsletter an die Gestaltung der Website anpassen – CSS-Variablen, Template überschreiben und wie Skript und Stylesheet geladen werden.
 zielgruppe: betrieb
 sprache: de
-stand: 2026-11-12
+stand: 2026-11-27
 ---
 
 # Anpassen
@@ -42,6 +42,11 @@ setzen, z. B.:
 | `--bn-radius` | `8px` | Ecken |
 | `--bn-font` | `inherit` | Schrift |
 
+Die zusätzlichen Felder stehen in `.brevo-nl__fields`, jedes in einer
+`.brevo-nl__row--<feld>` (`firstname`, `lastname`, `sms`, `landline`,
+`job_title`); Vor- und Nachname stehen ab 36 rem Breite nebeneinander. Der
+Hinweis ohne JavaScript ist `.brevo-nl__noscript`.
+
 ## Template
 
 `contao/templates/frontend_module/brevo_newsletter.html.twig` der Erweiterung
@@ -51,11 +56,19 @@ Module kommt in einen Ordner dieses Namens, z. B.
 `templates/frontend_module/brevo_newsletter/fusszeile.html.twig`, und wird im
 Modul unter **Modul-Template** gewählt. Behalten:
 
-- das Attribut `data-brevo-form` am Formular;
+- die Attribute `data-brevo-form` und `data-challenge="{{ challengeUrl }}"` am
+  Formular (das zweite sagt dem Skript, wo es die Aufgabe des Spamschutzes holt;
+  ohne es wird jede Anmeldung abgelehnt);
 - die Feldnamen `mod`, `email`, `website` (verstecktes Feld gegen Spam-Bots),
   `consent` und `lists`;
+- an jedem zusätzlichen Feld das Attribut `data-brevo-field="{{ f.key }}"` (die
+  Felder kommen als `fieldsBefore` und `fieldsAfter`: vor und nach dem E-Mail-Feld,
+  jedes mit `key`, `label`, `type`, `autocomplete`, `required`, `maxlength`);
 - das Statuselement `.brevo-nl__msg` mit seinen `data-*`-Attributen (es trägt
   die Meldungen des Moduls).
+- den Hinweis `<noscript>{{ noscript }}</noscript>` für Besucher ohne JavaScript;
+  seit 1.1.0 trägt das Statuselement auch `data-fields`, `data-phone`,
+  `data-repeat` und `data-verify`.
 
 Das Skript findet Formular und Felder daran. Nach einem Update der Erweiterung
 das überschriebene Template mit der neuen Fassung vergleichen.

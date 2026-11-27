@@ -3,7 +3,7 @@ title: Customising
 summary: Adapting the sign-up form of Contao Brevo Newsletter to the design of the website – CSS variables, overriding the template and how script and stylesheet are loaded.
 audience: operations
 language: en
-updated: 2026-11-12
+updated: 2026-11-27
 ---
 
 # Customising
@@ -41,6 +41,11 @@ e.g.:
 | `--bn-radius` | `8px` | corners |
 | `--bn-font` | `inherit` | font |
 
+The additional fields stand in `.brevo-nl__fields`, each in a
+`.brevo-nl__row--<field>` (`firstname`, `lastname`, `sms`, `landline`,
+`job_title`); first and last name stand side by side from a width of 36 rem.
+The note without JavaScript is `.brevo-nl__noscript`.
+
 ## Template
 
 Copy `contao/templates/frontend_module/brevo_newsletter.html.twig` of the
@@ -50,11 +55,20 @@ modules goes into a folder of that name, e.g.
 `templates/frontend_module/brevo_newsletter/footer.html.twig`, and is chosen
 in the module under **Module template**. Keep:
 
-- the attribute `data-brevo-form` on the form;
+- the attributes `data-brevo-form` and `data-challenge="{{ challengeUrl }}"` on
+  the form (the second one tells the script where to fetch the task of the spam
+  protection; without it, every sign-up is refused);
 - the field names `mod`, `email`, `website` (hidden field against spam bots),
   `consent` and `lists`;
+- on each additional field the attribute `data-brevo-field="{{ f.key }}"` (the
+  fields come as `fieldsBefore` and `fieldsAfter`: before and after the e-mail
+  field, each with `key`, `label`, `type`, `autocomplete`, `required`,
+  `maxlength`);
 - the status element `.brevo-nl__msg` with its `data-*` attributes (it
-  carries the messages of the module).
+  carries the messages of the module; since 1.1.0 also `data-fields`,
+  `data-phone`, `data-repeat` and `data-verify`);
+- the note `<noscript>{{ noscript }}</noscript>` for visitors without
+  JavaScript.
 
 The script finds the form and the fields by them. After an update of the
 extension, compare the overridden template with the new version.

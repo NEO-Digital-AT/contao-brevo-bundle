@@ -38,4 +38,14 @@ final class ApiKeyResolverTest extends TestCase
         $_ENV['BREVO_API_KEY'] = 'from-env';
         $this->assertSame('from-env', $resolver->resolve());
     }
+
+    public function testTheMcpFormOfTheKeyIsUnwrapped(): void
+    {
+        $mcp = base64_encode((string) json_encode(['api_key' => 'xkeysib-example-1234']));
+
+        $this->assertSame('xkeysib-example-1234', ApiKeyResolver::unwrap(' '.$mcp.' '));
+        $this->assertSame('xkeysib-example-1234', ApiKeyResolver::unwrap(rtrim(strtr($mcp, '+/', '-_'), '=')), 'URL-safe base64');
+        $this->assertSame('xkeysib-plain', ApiKeyResolver::unwrap('xkeysib-plain'));
+        $this->assertSame('something-else', ApiKeyResolver::unwrap('something-else'), 'unknown forms stay as they are');
+    }
 }

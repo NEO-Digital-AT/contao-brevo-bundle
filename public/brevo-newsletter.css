@@ -46,6 +46,16 @@
 }
 select.brevo-nl__input { cursor: pointer; }
 
+/* Additional fields: first and last name side by side on wider screens */
+.brevo-nl__fields { display: grid; gap: .85rem; }
+@media (min-width: 36rem) {
+  .brevo-nl__fields { grid-template-columns: 1fr 1fr; }
+  .brevo-nl__fields > :not(.brevo-nl__row--firstname):not(.brevo-nl__row--lastname) { grid-column: 1 / -1; }
+}
+
+/* Note without JavaScript (the spam protection needs it) */
+.brevo-nl__noscript { margin: 0; font-size: .88rem; color: var(--bn-err); }
+
 /* List selection (choice mode) */
 .brevo-nl__lists { display: flex; flex-direction: column; gap: .5rem; margin: 0; padding: 0; border: 0; }
 .brevo-nl__lists legend { padding: 0; margin-bottom: .15rem; }

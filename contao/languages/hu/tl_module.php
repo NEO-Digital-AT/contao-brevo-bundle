@@ -42,3 +42,34 @@ $GLOBALS['TL_LANG']['tl_module']['licence_legend'] = 'Licenc';
 $GLOBALS['TL_LANG']['tl_module']['brevo_locked_no_key'] = 'Még nincs Brevo API-kulcs a „Hozzáférések és licencek” oldalon: a fiók listái és sablonjai nem tölthetők be. A korábban mentett választás megmarad.';
 $GLOBALS['TL_LANG']['tl_module']['brevo_locked_no_answer'] = 'A Brevo a mentett kulcshoz nem ad listákat (hibás kulcs, vagy a Brevo nem érhető el): nincs mit kiválasztani. A korábban mentett választás megmarad.';
 $GLOBALS['TL_LANG']['tl_module']['brevo_locked_choice'] = 'Csak a „Választható” módban érvényes.';
+
+// Since 1.1.0: additional fields, field labels, messages and spam protection.
+$GLOBALS['TL_LANG']['tl_module']['text_legend'] = 'Szöveg';
+$GLOBALS['TL_LANG']['tl_module']['fields_legend'] = 'További mezők';
+$GLOBALS['TL_LANG']['tl_module']['labels_legend'] = 'A mezők feliratai';
+$GLOBALS['TL_LANG']['tl_module']['spam_legend'] = 'Spamvédelem';
+$GLOBALS['TL_LANG']['tl_module']['brevo_fields'] = ['További mezők', 'A kapcsolattal együtt a Brevóban tárolódnak.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_fields_required'] = ['Kötelező mezők', 'Ezek nélkül a feliratkozás elutasításra kerül. Csak a megjelenített mezők számítanak.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_fields_options'] = [
+    'firstname' => 'Keresztnév',
+    'lastname' => 'Vezetéknév',
+    'sms' => 'Mobilszám (Brevo: SMS)',
+    'landline' => 'Vezetékes telefon (Brevo: LANDLINE_NUMBER)',
+    'job_title' => 'Beosztás (Brevo: JOB_TITLE)',
+];
+$GLOBALS['TL_LANG']['tl_module']['brevo_attr_firstname'] = ['Brevo-attribútum a keresztnévhez', 'Automatikus = a fiók alapattribútuma (FIRSTNAME, VORNAME, PRENOM …).'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_attr_lastname'] = ['Brevo-attribútum a vezetéknévhez', 'Automatikus = a fiók alapattribútuma (LASTNAME, NACHNAME, NOM …).'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_attr_auto'] = 'Automatikus';
+$GLOBALS['TL_LANG']['tl_module']['brevo_label_firstname'] = ['Felirat: keresztnév', 'Üres = alapértelmezés (szürkén látható), az oldalon annak nyelvén.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_label_lastname'] = ['Felirat: vezetéknév', 'Üres = alapértelmezés (szürkén látható), az oldalon annak nyelvén.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_label_sms'] = ['Felirat: mobilszám', 'Üres = alapértelmezés (szürkén látható), az oldalon annak nyelvén.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_label_landline'] = ['Felirat: vezetékes telefon', 'Üres = alapértelmezés (szürkén látható), az oldalon annak nyelvén.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_label_job_title'] = ['Felirat: beosztás', 'Üres = alapértelmezés (szürkén látható), az oldalon annak nyelvén.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_error_fields'] = ['Üzenet: üres kötelező mező', 'Üres = alapértelmezés (szürkén látható), az oldalon annak nyelvén.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_error_phone'] = ['Üzenet: a telefonszám nem nemzetközi', 'Üres = alapértelmezés (szürkén látható), az oldalon annak nyelvén.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_error_repeat'] = ['Üzenet: a cím már fel van iratkozva', 'Üres = alapértelmezés (szürkén látható), az oldalon annak nyelvén.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_error_verify'] = ['Üzenet: sikertelen biztonsági ellenőrzés', 'Üres = alapértelmezés (szürkén látható), az oldalon annak nyelvén.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_limit_hour'] = ['Feliratkozás óránként', 'Megerősítő e-mailek óránként az összes látogatóra együtt. 0 = nincs korlát.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_limit_day'] = ['Feliratkozás naponta', 'Megerősítő e-mailek naponta az összes látogatóra együtt. 0 = nincs korlát.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_spam_text'] = 'Beépítve és mindig bekapcsolva: egy láthatatlan feladat, amelyet a látogató böngészője a cím begépelése közben megold (ALTCHA-módszer, sütik nélkül, a látogatónak semmire sem kell kattintania), rejtett mező a botok ellen, más weboldalakról és szkriptekből érkező kérések elutasítása, címenként egy megerősítő e-mail 24 óránként, látogatónként legfeljebb 2 feliratkozás óránként és 3 naponta. Alatta: az összes látogatóra együtt érvényes korlát. Megállítja az IP-címet váltogató botokat; ha eléri, a rendszernapló jelzi.';
+$GLOBALS['TL_LANG']['tl_module']['brevo_locked_field'] = 'Csak akkor használatos, ha ez a névmező megjelenik.';

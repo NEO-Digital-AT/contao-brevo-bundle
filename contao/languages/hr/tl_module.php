@@ -42,3 +42,34 @@ $GLOBALS['TL_LANG']['tl_module']['licence_legend'] = 'Licenca';
 $GLOBALS['TL_LANG']['tl_module']['brevo_locked_no_key'] = 'Još nema Brevo API ključa pod „Pristupi i licence”: popisi i predlošci računa ne mogu se učitati. Prije spremljeni odabir ostaje.';
 $GLOBALS['TL_LANG']['tl_module']['brevo_locked_no_answer'] = 'Brevo za spremljeni ključ ne vraća popise (pogrešan ključ ili Brevo nedostupan): nema se što odabrati. Prije spremljeni odabir ostaje.';
 $GLOBALS['TL_LANG']['tl_module']['brevo_locked_choice'] = 'Vrijedi samo u načinu „Izbor”.';
+
+// Since 1.1.0: additional fields, field labels, messages and spam protection.
+$GLOBALS['TL_LANG']['tl_module']['text_legend'] = 'Tekst';
+$GLOBALS['TL_LANG']['tl_module']['fields_legend'] = 'Dodatna polja';
+$GLOBALS['TL_LANG']['tl_module']['labels_legend'] = 'Oznake polja';
+$GLOBALS['TL_LANG']['tl_module']['spam_legend'] = 'Zaštita od neželjene pošte';
+$GLOBALS['TL_LANG']['tl_module']['brevo_fields'] = ['Dodatna polja', 'Spremaju se uz kontakt u Brevu.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_fields_required'] = ['Obavezna polja', 'Bez ovih podataka prijava se odbija. Računaju se samo prikazana polja.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_fields_options'] = [
+    'firstname' => 'Ime',
+    'lastname' => 'Prezime',
+    'sms' => 'Broj mobitela (Brevo: SMS)',
+    'landline' => 'Fiksni telefon (Brevo: LANDLINE_NUMBER)',
+    'job_title' => 'Radno mjesto (Brevo: JOB_TITLE)',
+];
+$GLOBALS['TL_LANG']['tl_module']['brevo_attr_firstname'] = ['Atribut Breva za ime', 'Automatski = zadani atribut računa (FIRSTNAME, VORNAME, PRENOM …).'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_attr_lastname'] = ['Atribut Breva za prezime', 'Automatski = zadani atribut računa (LASTNAME, NACHNAME, NOM …).'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_attr_auto'] = 'Automatski';
+$GLOBALS['TL_LANG']['tl_module']['brevo_label_firstname'] = ['Oznaka: ime', 'Prazno = zadani tekst (prikazan sivo), na stranici na njezinu jeziku.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_label_lastname'] = ['Oznaka: prezime', 'Prazno = zadani tekst (prikazan sivo), na stranici na njezinu jeziku.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_label_sms'] = ['Oznaka: broj mobitela', 'Prazno = zadani tekst (prikazan sivo), na stranici na njezinu jeziku.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_label_landline'] = ['Oznaka: fiksni telefon', 'Prazno = zadani tekst (prikazan sivo), na stranici na njezinu jeziku.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_label_job_title'] = ['Oznaka: radno mjesto', 'Prazno = zadani tekst (prikazan sivo), na stranici na njezinu jeziku.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_error_fields'] = ['Poruka: obavezno polje prazno', 'Prazno = zadani tekst (prikazan sivo), na stranici na njezinu jeziku.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_error_phone'] = ['Poruka: broj nije u međunarodnom formatu', 'Prazno = zadani tekst (prikazan sivo), na stranici na njezinu jeziku.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_error_repeat'] = ['Poruka: adresa je već prijavljena', 'Prazno = zadani tekst (prikazan sivo), na stranici na njezinu jeziku.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_error_verify'] = ['Poruka: sigurnosna provjera nije uspjela', 'Prazno = zadani tekst (prikazan sivo), na stranici na njezinu jeziku.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_limit_hour'] = ['Prijava po satu', 'E-poruke za potvrdu po satu za sve posjetitelje zajedno. 0 = bez ograničenja.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_limit_day'] = ['Prijava po danu', 'E-poruke za potvrdu po danu za sve posjetitelje zajedno. 0 = bez ograničenja.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_spam_text'] = 'Ugrađeno i uvijek uključeno: nevidljivi zadatak koji preglednik posjetitelja rješava dok upisuje adresu (metoda ALTCHA, bez kolačića, posjetitelj ništa ne klikće), skriveno polje protiv botova, odbijanje zahtjeva s drugih web-mjesta i iz skripti, jedna e-poruka za potvrdu po adresi u 24 sata, najviše 2 prijave po posjetitelju na sat i 3 na dan. Ispod: ograničenje za sve posjetitelje zajedno. Zaustavlja botove koji mijenjaju IP adresu; kad se dosegne, to piše u zapisniku sustava.';
+$GLOBALS['TL_LANG']['tl_module']['brevo_locked_field'] = 'Koristi se samo kad se prikazuje ovo polje imena.';

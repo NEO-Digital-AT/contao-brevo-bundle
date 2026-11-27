@@ -9,12 +9,17 @@ use Symfony\Component\RateLimiter\RateLimiterFactory;
 use Symfony\Component\RateLimiter\Storage\CacheStorage;
 
 /**
- * Per-client sliding-window rate limit for the subscribe endpoint, backed by the
- * application cache. Self-contained so the bundle needs no host-side
- * framework.rate_limiter configuration.
+ * Per-client sliding-window limit on ATTEMPTS at the subscribe endpoint (valid or
+ * not), backed by the application cache: LIMIT in INTERVAL. Sign-ups that Brevo
+ * accepted are limited separately (SignupGuard). The client key is stored only as
+ * a hash. Self-contained so the bundle needs no host-side framework.rate_limiter
+ * configuration.
  */
 final class SubscribeRateLimiter
 {
+    public const LIMIT = 5;
+    public const INTERVAL = '10 minutes';
+
     private readonly RateLimiterFactory $factory;
 
     public function __construct(CacheItemPoolInterface $cache)
@@ -23,8 +28,8 @@ final class SubscribeRateLimiter
             [
                 'id' => 'neo_brevo_newsletter',
                 'policy' => 'sliding_window',
-                'limit' => 8,
-                'interval' => '1 minute',
+                'limit' => self::LIMIT,
+                'interval' => self::INTERVAL,
             ],
             new CacheStorage($cache),
         );
@@ -32,6 +37,6 @@ final class SubscribeRateLimiter
 
     public function accept(string $key): bool
     {
-        return $this->factory->create($key)->consume(1)->isAccepted();
+        return $this->factory->create(hash('sha256', $key))->consume(1)->isAccepted();
     }
 }

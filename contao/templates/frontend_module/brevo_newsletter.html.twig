@@ -2,13 +2,18 @@
 
 {# NEO Brevo Newsletter sign-up (frontend module). Default markup — override in
    the project's templates/ to restyle. All copy comes from editable back-end
-   fields; the form posts to the subscribe endpoint (JSON via JS, redirect fallback). #}
+   fields; the form posts to the subscribe endpoint as JSON (brevo-newsletter.js).
+
+   Keep in an override (the script and the spam protection need them):
+   data-brevo-form, data-challenge, the field names mod/email/website/consent/lists,
+   data-brevo-field on the additional fields, .brevo-nl__msg with its data-*
+   messages, .brevo-nl__btn. #}
 {% block inner %}
 <div class="brevo-nl{{ configured ? '' : ' brevo-nl--unconfigured' }}">
   {% if headline %}<{{ headlineTag }} class="brevo-nl__title">{{ headline }}</{{ headlineTag }}>{% endif %}
   {% if intro %}<p class="brevo-nl__intro">{{ intro|nl2br }}</p>{% endif %}
 
-  <form class="brevo-nl__form" method="post" action="{{ endpoint }}" data-brevo-form novalidate>
+  <form class="brevo-nl__form" method="post" action="{{ endpoint }}" data-brevo-form data-challenge="{{ challengeUrl }}" novalidate>
     <input type="hidden" name="mod" value="{{ modId }}">
 
     {# Honeypot — kept out of the layout and away from assistive tech. #}
@@ -16,11 +21,35 @@
       <label>Website<input type="text" name="website" tabindex="-1" autocomplete="off"></label>
     </div>
 
+    {% if fieldsBefore %}
+    <div class="brevo-nl__fields">
+      {% for f in fieldsBefore %}
+      <div class="brevo-nl__row brevo-nl__row--{{ f.key }}">
+        <label class="brevo-nl__label" for="brevo-{{ f.key }}-{{ modId }}">{{ f.label }}</label>
+        <input class="brevo-nl__input" type="{{ f.type }}" id="brevo-{{ f.key }}-{{ modId }}" name="fields[{{ f.key }}]"
+               data-brevo-field="{{ f.key }}" maxlength="{{ f.maxlength }}" autocomplete="{{ f.autocomplete }}"{{ f.type == 'tel' ? ' inputmode="tel"' }}{{ f.required ? ' required' }}>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
     <div class="brevo-nl__row">
       <label class="brevo-nl__label" for="brevo-email-{{ modId }}">{{ emailLabel }}</label>
       <input class="brevo-nl__input" type="email" id="brevo-email-{{ modId }}" name="email"
              required autocomplete="email" placeholder="{{ emailLabel }}">
     </div>
+
+    {% if fieldsAfter %}
+    <div class="brevo-nl__fields">
+      {% for f in fieldsAfter %}
+      <div class="brevo-nl__row brevo-nl__row--{{ f.key }}">
+        <label class="brevo-nl__label" for="brevo-{{ f.key }}-{{ modId }}">{{ f.label }}</label>
+        <input class="brevo-nl__input" type="{{ f.type }}" id="brevo-{{ f.key }}-{{ modId }}" name="fields[{{ f.key }}]"
+               data-brevo-field="{{ f.key }}" maxlength="{{ f.maxlength }}" autocomplete="{{ f.autocomplete }}"{{ f.type == 'tel' ? ' inputmode="tel"' }}{{ f.required ? ' required' }}>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
 
     {% if mode == 'choice' and lists %}
     <fieldset class="brevo-nl__lists">
@@ -46,9 +75,13 @@
 
     <button class="brevo-nl__btn" type="submit">{{ button }}</button>
 
+    {# The spam protection is solved by the browser: without JavaScript no sign-up. #}
+    <noscript><p class="brevo-nl__noscript">{{ noscript }}</p></noscript>
+
     <p class="brevo-nl__msg" role="status" aria-live="polite"
        data-success="{{ success }}" data-generic="{{ genericError }}" data-choose="{{ chooseError }}"
-       data-invalid="{{ invalidError }}" data-limit="{{ limitError }}"></p>
+       data-invalid="{{ invalidError }}" data-limit="{{ limitError }}" data-fields="{{ fieldsError }}" data-phone="{{ phoneError }}"
+       data-repeat="{{ repeatError }}" data-verify="{{ verifyError }}"></p>
   </form>
 </div>
 {% endblock %}

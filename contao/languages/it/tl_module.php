@@ -42,3 +42,34 @@ $GLOBALS['TL_LANG']['tl_module']['licence_legend'] = 'Licenza';
 $GLOBALS['TL_LANG']['tl_module']['brevo_locked_no_key'] = 'Ancora nessuna chiave API Brevo in «Accessi e licenze»: liste e modelli dell’account non si possono caricare. Una scelta salvata in precedenza resta.';
 $GLOBALS['TL_LANG']['tl_module']['brevo_locked_no_answer'] = 'Brevo non restituisce liste per la chiave salvata (chiave errata o Brevo non raggiungibile): non c’è nulla da scegliere. Una scelta salvata in precedenza resta.';
 $GLOBALS['TL_LANG']['tl_module']['brevo_locked_choice'] = 'Vale solo con la modalità «A scelta».';
+
+// Since 1.1.0: additional fields, field labels, messages and spam protection.
+$GLOBALS['TL_LANG']['tl_module']['text_legend'] = 'Testo';
+$GLOBALS['TL_LANG']['tl_module']['fields_legend'] = 'Campi aggiuntivi';
+$GLOBALS['TL_LANG']['tl_module']['labels_legend'] = 'Etichette dei campi';
+$GLOBALS['TL_LANG']['tl_module']['spam_legend'] = 'Protezione antispam';
+$GLOBALS['TL_LANG']['tl_module']['brevo_fields'] = ['Campi aggiuntivi', 'Salvati con il contatto in Brevo.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_fields_required'] = ['Campi obbligatori', 'Senza questi dati l’iscrizione viene rifiutata. Contano solo i campi mostrati.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_fields_options'] = [
+    'firstname' => 'Nome',
+    'lastname' => 'Cognome',
+    'sms' => 'Numero di cellulare (Brevo: SMS)',
+    'landline' => 'Telefono fisso (Brevo: LANDLINE_NUMBER)',
+    'job_title' => 'Ruolo (Brevo: JOB_TITLE)',
+];
+$GLOBALS['TL_LANG']['tl_module']['brevo_attr_firstname'] = ['Attributo Brevo per il nome', 'Automatico = l’attributo predefinito dell’account (FIRSTNAME, VORNAME, PRENOM …).'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_attr_lastname'] = ['Attributo Brevo per il cognome', 'Automatico = l’attributo predefinito dell’account (LASTNAME, NACHNAME, NOM …).'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_attr_auto'] = 'Automatico';
+$GLOBALS['TL_LANG']['tl_module']['brevo_label_firstname'] = ['Etichetta: nome', 'Vuoto = testo predefinito (mostrato in grigio), sul sito nella lingua della pagina.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_label_lastname'] = ['Etichetta: cognome', 'Vuoto = testo predefinito (mostrato in grigio), sul sito nella lingua della pagina.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_label_sms'] = ['Etichetta: numero di cellulare', 'Vuoto = testo predefinito (mostrato in grigio), sul sito nella lingua della pagina.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_label_landline'] = ['Etichetta: telefono fisso', 'Vuoto = testo predefinito (mostrato in grigio), sul sito nella lingua della pagina.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_label_job_title'] = ['Etichetta: ruolo', 'Vuoto = testo predefinito (mostrato in grigio), sul sito nella lingua della pagina.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_error_fields'] = ['Messaggio: campo obbligatorio vuoto', 'Vuoto = testo predefinito (mostrato in grigio), sul sito nella lingua della pagina.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_error_phone'] = ['Messaggio: numero non in formato internazionale', 'Vuoto = testo predefinito (mostrato in grigio), sul sito nella lingua della pagina.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_error_repeat'] = ['Messaggio: indirizzo già iscritto', 'Vuoto = testo predefinito (mostrato in grigio), sul sito nella lingua della pagina.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_error_verify'] = ['Messaggio: controllo di sicurezza fallito', 'Vuoto = testo predefinito (mostrato in grigio), sul sito nella lingua della pagina.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_limit_hour'] = ['Iscrizioni all’ora', 'E-mail di conferma all’ora per tutti i visitatori insieme. 0 = nessun limite.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_limit_day'] = ['Iscrizioni al giorno', 'E-mail di conferma al giorno per tutti i visitatori insieme. 0 = nessun limite.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_spam_text'] = 'Integrata e sempre attiva: un compito invisibile che il browser del visitatore risolve mentre digita l’indirizzo (metodo ALTCHA, senza cookie, il visitatore non deve cliccare nulla), un campo nascosto contro i bot, il rifiuto delle richieste da altri siti e da script, un’e-mail di conferma per indirizzo ogni 24 ore, al massimo 2 iscrizioni per visitatore all’ora e 3 al giorno. Sotto: il limite per tutti i visitatori insieme. Ferma i bot che cambiano indirizzo IP; quando viene raggiunto, lo indica il registro di sistema.';
+$GLOBALS['TL_LANG']['tl_module']['brevo_locked_field'] = 'Usato solo quando questo campo del nome è mostrato.';

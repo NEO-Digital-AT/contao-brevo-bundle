@@ -92,6 +92,34 @@ final class BrevoClient
     }
 
     /**
+     * Returns the account's text attributes of contacts (category "normal") as
+     * [name => name], cached for an hour and resilient (empty array on any error).
+     * Used to choose where first and last name are stored (FIRSTNAME, VORNAME, …:
+     * Brevo names the default attributes in the language of the account).
+     *
+     * @return array<string, string>
+     */
+    public function getAttributes(string $apiKey): array
+    {
+        if ('' === $apiKey) {
+            return [];
+        }
+
+        $item = $this->cache->getItem('neo_brevo_attributes_'.hash('sha256', $apiKey));
+
+        if ($item->isHit()) {
+            return $item->get();
+        }
+
+        $attributes = $this->fetchAttributes($apiKey);
+
+        $item->set($attributes)->expiresAfter([] === $attributes ? 60 : self::LIST_TTL);
+        $this->cache->save($item);
+
+        return $attributes;
+    }
+
+    /**
      * Creates/updates a contact through Brevo's double-opt-in flow. Brevo sends the
      * DOI confirmation e-mail using $templateId and, on confirmation, adds the
      * contact to $listIds and redirects to $redirectUrl.
@@ -193,6 +221,36 @@ final class BrevoClient
         }
 
         return $lists;
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private function fetchAttributes(string $apiKey): array
+    {
+        try {
+            $response = $this->httpClient->request('GET', self::BASE.'/contacts/attributes', [
+                'headers' => ['api-key' => $apiKey, 'accept' => 'application/json'],
+            ]);
+
+            $data = $response->toArray(false);
+        } catch (\Throwable) {
+            return [];
+        }
+
+        $attributes = [];
+
+        foreach ($data['attributes'] ?? [] as $attribute) {
+            if (!isset($attribute['name']) || 'normal' !== ($attribute['category'] ?? '') || 'text' !== ($attribute['type'] ?? 'text')) {
+                continue;
+            }
+
+            $attributes[(string) $attribute['name']] = (string) $attribute['name'];
+        }
+
+        ksort($attributes);
+
+        return $attributes;
     }
 
     /**

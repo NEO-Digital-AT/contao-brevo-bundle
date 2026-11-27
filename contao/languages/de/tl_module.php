@@ -42,3 +42,34 @@ $GLOBALS['TL_LANG']['tl_module']['licence_legend'] = 'Lizenz';
 $GLOBALS['TL_LANG']['tl_module']['brevo_locked_no_key'] = 'Noch kein Brevo-API-Schlüssel unter „Zugänge und Lizenzen“: Listen und Vorlagen des Kontos können nicht geladen werden. Eine früher gespeicherte Auswahl bleibt erhalten.';
 $GLOBALS['TL_LANG']['tl_module']['brevo_locked_no_answer'] = 'Brevo liefert zum gespeicherten Schlüssel keine Listen (Schlüssel falsch oder Brevo nicht erreichbar): Es gibt nichts zu wählen. Eine früher gespeicherte Auswahl bleibt erhalten.';
 $GLOBALS['TL_LANG']['tl_module']['brevo_locked_choice'] = 'Wirkt nur im Modus „Auswahl“.';
+
+// Since 1.1.0: additional fields, field labels, messages and spam protection.
+$GLOBALS['TL_LANG']['tl_module']['text_legend'] = 'Text';
+$GLOBALS['TL_LANG']['tl_module']['fields_legend'] = 'Zusätzliche Felder';
+$GLOBALS['TL_LANG']['tl_module']['labels_legend'] = 'Beschriftungen der Felder';
+$GLOBALS['TL_LANG']['tl_module']['spam_legend'] = 'Spamschutz';
+$GLOBALS['TL_LANG']['tl_module']['brevo_fields'] = ['Zusätzliche Felder', 'Werden beim Kontakt in Brevo gespeichert.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_fields_required'] = ['Pflichtfelder', 'Ohne diese Angaben wird die Anmeldung abgelehnt. Es zählen nur Felder, die angezeigt werden.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_fields_options'] = [
+    'firstname' => 'Vorname',
+    'lastname' => 'Nachname',
+    'sms' => 'Mobilnummer (Brevo: SMS)',
+    'landline' => 'Festnetz (Brevo: LANDLINE_NUMBER)',
+    'job_title' => 'Position (Brevo: JOB_TITLE)',
+];
+$GLOBALS['TL_LANG']['tl_module']['brevo_attr_firstname'] = ['Brevo-Attribut für den Vornamen', 'Automatisch = das Standard-Attribut des Kontos (FIRSTNAME, VORNAME, PRENOM …).'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_attr_lastname'] = ['Brevo-Attribut für den Nachnamen', 'Automatisch = das Standard-Attribut des Kontos (LASTNAME, NACHNAME, NOM …).'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_attr_auto'] = 'Automatisch';
+$GLOBALS['TL_LANG']['tl_module']['brevo_label_firstname'] = ['Beschriftung: Vorname', 'Leer = Vorgabe (grau angezeigt), auf der Seite in deren Sprache.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_label_lastname'] = ['Beschriftung: Nachname', 'Leer = Vorgabe (grau angezeigt), auf der Seite in deren Sprache.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_label_sms'] = ['Beschriftung: Mobilnummer', 'Leer = Vorgabe (grau angezeigt), auf der Seite in deren Sprache.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_label_landline'] = ['Beschriftung: Festnetz', 'Leer = Vorgabe (grau angezeigt), auf der Seite in deren Sprache.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_label_job_title'] = ['Beschriftung: Position', 'Leer = Vorgabe (grau angezeigt), auf der Seite in deren Sprache.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_error_fields'] = ['Meldung: Pflichtfeld leer', 'Leer = Vorgabe (grau angezeigt), auf der Seite in deren Sprache.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_error_phone'] = ['Meldung: Telefonnummer nicht international', 'Leer = Vorgabe (grau angezeigt), auf der Seite in deren Sprache.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_error_repeat'] = ['Meldung: Adresse schon angemeldet', 'Leer = Vorgabe (grau angezeigt), auf der Seite in deren Sprache.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_error_verify'] = ['Meldung: Sicherheitsprüfung fehlgeschlagen', 'Leer = Vorgabe (grau angezeigt), auf der Seite in deren Sprache.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_limit_hour'] = ['Anmeldungen pro Stunde', 'Bestätigungsmails pro Stunde für alle Besucher zusammen. 0 = keine Grenze.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_limit_day'] = ['Anmeldungen pro Tag', 'Bestätigungsmails pro Tag für alle Besucher zusammen. 0 = keine Grenze.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_spam_text'] = 'Fest eingebaut und immer aktiv: eine unsichtbare Aufgabe, die der Browser des Besuchers löst, während er die Adresse eintippt (ALTCHA-Verfahren, ohne Cookies, der Besucher muss nichts anklicken), ein verstecktes Feld gegen Bots, Ablehnung von Anfragen fremder Websites und von Skripten, eine Bestätigungsmail pro Adresse in 24 Stunden, höchstens 2 Anmeldungen pro Besucher in der Stunde und 3 am Tag. Darunter: die Grenze für alle Besucher zusammen. Sie stoppt Bots, die ihre IP-Adresse wechseln; wird sie erreicht, steht es im Systemlog.';
+$GLOBALS['TL_LANG']['tl_module']['brevo_locked_field'] = 'Nur in Gebrauch, wenn dieses Namensfeld angezeigt wird.';

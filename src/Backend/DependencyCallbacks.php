@@ -67,10 +67,31 @@ final class DependencyCallbacks
             // Without an answer from Brevo the stored choice is shown by its id, not as empty.
             $this->storedAsOptions($dc->table, 'brevo_lists', array_map('intval', StringUtil::deserialize($row['brevo_lists'] ?? null, true)));
             $this->storedAsOptions($dc->table, 'brevo_doi_template', [(int) ($row['brevo_doi_template'] ?? 0)]);
+
+            // The name attributes come from the account too; "automatic" still works.
+            foreach (['brevo_attr_firstname', 'brevo_attr_lastname'] as $field) {
+                if ('tl_module' === $dc->table && isset($GLOBALS['TL_DCA'][$dc->table]['fields'][$field])) {
+                    FieldLock::lock($dc->table, $field, $reason);
+                    $stored = trim((string) ($row[$field] ?? ''));
+                    unset($GLOBALS['TL_DCA'][$dc->table]['fields'][$field]['options_callback']);
+                    $GLOBALS['TL_DCA'][$dc->table]['fields'][$field]['options'] = '' === $stored ? [] : [$stored => $stored];
+                }
+            }
         }
 
         if ('tl_module' === $dc->table && 'choice' !== (string) $row['brevo_mode']) {
             FieldLock::lock($dc->table, 'brevo_lists_label', $lang['brevo_locked_choice'] ?? '');
+        }
+
+        // The name attributes only matter when the name fields are shown.
+        if ('tl_module' === $dc->table) {
+            $fields = array_map('strval', StringUtil::deserialize($row['brevo_fields'] ?? null, true));
+
+            foreach (['firstname' => 'brevo_attr_firstname', 'lastname' => 'brevo_attr_lastname'] as $key => $field) {
+                if (!\in_array($key, $fields, true) && isset($GLOBALS['TL_DCA'][$dc->table]['fields'][$field])) {
+                    FieldLock::lock($dc->table, $field, $lang['brevo_locked_field'] ?? '');
+                }
+            }
         }
     }
 

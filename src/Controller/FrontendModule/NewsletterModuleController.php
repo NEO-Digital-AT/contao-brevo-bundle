@@ -13,6 +13,7 @@ use Contao\PageModel;
 use Contao\StringUtil;
 use Neo\BrevoNewsletterBundle\Brevo\ApiKeyResolver;
 use Neo\BrevoNewsletterBundle\Brevo\BrevoClient;
+use Neo\BrevoNewsletterBundle\Subscription\ContactFields;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -36,6 +37,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 final class NewsletterModuleController extends AbstractFrontendModuleController
 {
     public const ENDPOINT = '/api/brevo/subscribe';
+
+    /** Proof-of-work task of the spam protection (SubscribeController::challenge). */
+    public const CHALLENGE = '/api/brevo/challenge';
 
     public function __construct(
         private readonly InsertTagParser $insertTags,
@@ -76,6 +80,17 @@ final class NewsletterModuleController extends AbstractFrontendModuleController
         $template->set('invalidError', $own('brevo_error_invalid') ?: $t('error_invalid'));
         $template->set('limitError', $own('brevo_error_limit') ?: $t('error_limit'));
         $template->set('chooseError', $own('brevo_error_choose') ?: $t('error_choose'));
+        $template->set('repeatError', $own('brevo_error_repeat') ?: $t('error_repeat'));
+        $template->set('verifyError', $own('brevo_error_verify') ?: $t('error_verify'));
+        $template->set('fieldsError', $own('brevo_error_fields') ?: $t('error_fields'));
+        $template->set('phoneError', $own('brevo_error_phone') ?: $t('error_phone'));
+        // Without JavaScript the spam protection cannot be solved: the form says so.
+        $template->set('noscript', $t('noscript'));
+
+        // Additional fields (Brevo standard attributes), split around the e-mail field.
+        $fields = $this->buildFields($model, $own, $t);
+        $template->set('fieldsBefore', array_values(array_filter($fields, static fn (array $f): bool => $f['before'])));
+        $template->set('fieldsAfter', array_values(array_filter($fields, static fn (array $f): bool => !$f['before'])));
 
         $mode = 'choice' === $model->brevo_mode ? 'choice' : 'fixed';
         $template->set('mode', $mode);
@@ -84,11 +99,45 @@ final class NewsletterModuleController extends AbstractFrontendModuleController
 
         $template->set('modId', (int) $model->id);
         $template->set('endpoint', self::ENDPOINT);
+        $template->set('challengeUrl', self::CHALLENGE);
         $template->set('configured', $this->isConfigured($model));
         $template->set('listsLegend', $own('brevo_lists_label') ?: $t('lists_legend'));
         $template->set('listLabel', $t('list_label'));
 
         return $template->getResponse();
+    }
+
+    /**
+     * The additional fields switched on in the module, ready for the template.
+     *
+     * @param \Closure(string): string $own
+     * @param \Closure(string): string $t
+     *
+     * @return list<array{key: string, label: string, type: string, autocomplete: string, required: bool, before: bool, maxlength: int}>
+     */
+    private function buildFields(ModuleModel $model, \Closure $own, \Closure $t): array
+    {
+        $required = StringUtil::deserialize($model->brevo_fields_required, true);
+        $fields = [];
+
+        foreach (ContactFields::enabled(StringUtil::deserialize($model->brevo_fields, true)) as $key) {
+            $field = ContactFields::FIELDS[$key];
+            $isRequired = \in_array($key, $required, true);
+            $label = $own('brevo_label_'.$key) ?: $t('label_'.$key);
+
+            $fields[] = [
+                'key' => $key,
+                // Optional fields say so; the e-mail address is always required.
+                'label' => $isRequired ? $label : $label.' '.$t('optional'),
+                'type' => $field['type'],
+                'autocomplete' => $field['autocomplete'],
+                'required' => $isRequired,
+                'before' => $field['before'],
+                'maxlength' => ContactFields::MAX_LENGTH,
+            ];
+        }
+
+        return $fields;
     }
 
     /**

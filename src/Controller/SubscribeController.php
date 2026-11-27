@@ -11,6 +11,9 @@ use Contao\PageModel;
 use Contao\StringUtil;
 use Neo\BrevoNewsletterBundle\Brevo\ApiKeyResolver;
 use Neo\BrevoNewsletterBundle\Brevo\BrevoClient;
+use Neo\BrevoNewsletterBundle\Subscription\ContactFields;
+use Neo\BrevoNewsletterBundle\Subscription\ProofOfWork;
+use Neo\BrevoNewsletterBundle\Subscription\SignupGuard;
 use Neo\BrevoNewsletterBundle\Subscription\SubscribeRateLimiter;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -21,7 +24,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
- * Front-end endpoint for the newsletter sign-up: POST /api/brevo/subscribe.
+ * Front-end endpoints of the newsletter sign-up:
+ *  - GET  /api/brevo/challenge: a proof-of-work task for the spam protection;
+ *  - POST /api/brevo/subscribe: the sign-up.
  *
  * The API key is the one on "Access keys and licences" of the Basic bundle
  * (ApiKeyResolver, with the BREVO_API_KEY environment variable as fallback); the
@@ -29,24 +34,49 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * front-end module named in the request (so one key drives many sign-up
  * modules). In "fixed" mode the contact is added to all configured
  * lists; in "choice" mode only to the visitor's selection intersected with the
- * configured lists (never trusted from the client). Rate-limited per client, with
- * a honeypot + explicit consent flag. The e-mail address is not persisted/logged.
+ * configured lists (never trusted from the client).
+ *
+ * Spam protection, in this order (docs/en/usage.md, "Spam protection"):
+ *  1. attempts per visitor (SubscribeRateLimiter);
+ *  2. hidden field (honeypot), requests from other websites and from obvious
+ *     scripts (curl, Python, headless browsers …);
+ *  3. the solved proof-of-work task (ProofOfWork);
+ *  4. one confirmation e-mail per address in 24 hours, sign-ups per visitor and
+ *     the module's limit for all visitors together (SignupGuard).
+ * The e-mail address is not persisted or logged; the guard keeps a keyed hash.
  *
  * A sign-up that does not reach Brevo (module incomplete, Brevo refuses it, no
  * connection) is an error in Contao's system log (System › System log), so the
- * operator sees it; the application log keeps Brevo's full answer.
+ * operator sees it; the application log keeps Brevo's full answer. So is a
+ * module limit that is reached (once an hour): that is what an attack looks like.
  */
 final class SubscribeController extends AbstractController
 {
+    /** User agents of scripts and automated browsers, never of a person's browser. */
+    private const AUTOMATED = '/headlesschrome|phantomjs|selenium|puppeteer|playwright|\\bbot\\b|crawler|spider|scrapy|curl\\/|wget|python|go-http|node-fetch|undici|axios|okhttp|java\\/|libwww|httpclient|guzzle|postman|insomnia/i';
+
     public function __construct(
         private readonly ContaoFramework $framework,
         private readonly BrevoClient $brevo,
         private readonly ApiKeyResolver $apiKeys,
         private readonly SubscribeRateLimiter $limiter,
         private readonly ContentUrlGenerator $urls,
+        private readonly ProofOfWork $proofOfWork,
+        private readonly SignupGuard $guard,
         private readonly LoggerInterface|null $logger = null,
         private readonly LoggerInterface|null $contaoErrorLog = null,
     ) {
+    }
+
+    /** GET /api/brevo/challenge — never cached, a new task on every call. */
+    public function challenge(): JsonResponse
+    {
+        $response = new JsonResponse($this->proofOfWork->challenge());
+        $response->setPrivate();
+        $response->headers->set('Cache-Control', 'no-store, private');
+        $response->headers->set('X-Robots-Tag', 'noindex');
+
+        return $response;
     }
 
     public function subscribe(Request $request): Response
@@ -62,14 +92,16 @@ final class SubscribeController extends AbstractController
         // No-JS fallback target: bounce back to the form page (referrer), NOT the
         // Brevo confirmation page — that one is only reached after the DOI click.
         $back = $this->backUrl($request);
+        $client = (string) $request->getClientIp();
 
         try {
-            if (!$this->limiter->accept('nl-'.$request->getClientIp())) {
+            if (!$this->limiter->accept('nl-'.$client)) {
                 return $this->result($wantsJson, 'rate_limited', 429, $back);
             }
 
-            // Honeypot: a real user never fills this hidden field.
-            if ('' !== trim((string) ($payload['website'] ?? ''))) {
+            // Honeypot: a real user never fills this hidden field. Requests from another
+            // website or from a script are no sign-ups of a visitor either.
+            if ('' !== trim((string) ($payload['website'] ?? '')) || $this->foreign($request) || $this->automated($request)) {
                 return $this->result($wantsJson, 'invalid', 400, $back);
             }
 
@@ -79,6 +111,42 @@ final class SubscribeController extends AbstractController
 
             if (false === $email || !$consent || null === $module || 'brevo_newsletter' !== $module->type) {
                 return $this->result($wantsJson, 'invalid', 400, $back);
+            }
+
+            // Additional fields switched on in the module; others are ignored.
+            $values = $this->fieldValues($module, $payload);
+
+            if (\is_string($values)) {
+                return $this->result($wantsJson, $values, 400, $back);
+            }
+
+            // Before anything that reveals whether the address is known: only a solved
+            // task gets that far.
+            if ('' !== $this->proofOfWork->verify((string) ($payload['altcha'] ?? ''))) {
+                return $this->result($wantsJson, 'verify', 400, $back);
+            }
+
+            // One confirmation e-mail per address in 24 hours: a repeat sends nothing.
+            if ($this->guard->addressSeen($email)) {
+                return $this->result($wantsJson, 'repeat', 409, $back);
+            }
+
+            if ($this->guard->clientExhausted($client)) {
+                return $this->result($wantsJson, 'rate_limited', 429, $back);
+            }
+
+            $perHour = $this->limit($module->brevo_limit_hour, SignupGuard::MODULE_PER_HOUR);
+            $perDay = $this->limit($module->brevo_limit_day, SignupGuard::MODULE_PER_DAY);
+            $full = $this->guard->moduleExhausted((int) $module->id, $perHour, $perDay);
+
+            if ('' !== $full) {
+                if ($this->guard->firstRefusalThisHour((int) $module->id)) {
+                    $this->systemLog($module, 'hour' === $full
+                        ? \sprintf('the limit of %d sign-ups an hour is reached, further sign-ups are refused until the next full hour. Many sign-ups in a short time are typical of bots that enter other people\'s addresses', $perHour)
+                        : \sprintf('the limit of %d sign-ups a day is reached, further sign-ups are refused until midnight. Many sign-ups in a short time are typical of bots that enter other people\'s addresses', $perDay));
+                }
+
+                return $this->result($wantsJson, 'rate_limited', 429, $back);
             }
 
             $redirect = $this->redirectUrl((int) $module->brevo_redirect);
@@ -101,9 +169,19 @@ final class SubscribeController extends AbstractController
                 return $this->result($wantsJson, 'not_configured', 503, $back);
             }
 
-            $ok = $this->brevo->createDoiContact($apiKey, $email, $listIds, $templateId, $redirect);
+            $attributes = $this->attributes($module, $apiKey, $values);
+            $ok = $this->brevo->createDoiContact($apiKey, $email, $listIds, $templateId, $redirect, $attributes);
 
-            if (!$ok) {
+            // The sign-up matters more than the name: if Brevo refuses the attributes
+            // (e.g. an attribute the account does not have), once more without them.
+            if (!$ok && [] !== $attributes) {
+                $this->systemLog($module, 'Brevo refused the attributes '.implode(', ', array_keys($attributes)).' ('.$this->brevo->lastError().'); the visitor is signed up without them');
+                $ok = $this->brevo->createDoiContact($apiKey, $email, $listIds, $templateId, $redirect);
+            }
+
+            if ($ok) {
+                $this->guard->record($email, $client, (int) $module->id);
+            } else {
                 $this->systemLog($module, 'Brevo refused it ('.$this->brevo->lastError().')');
             }
         } catch (\Throwable $e) {
@@ -116,6 +194,91 @@ final class SubscribeController extends AbstractController
         }
 
         return $this->result($wantsJson, $ok ? 'ok' : 'send_failed', $ok ? 200 : 502, $back);
+    }
+
+    /**
+     * The values of the module's additional fields, or the status of the error:
+     * 'fields' (a required field is empty), 'phone' (not in international format).
+     *
+     * @param array<string, mixed> $payload
+     *
+     * @return array<string, string>|string
+     */
+    private function fieldValues(ModuleModel $module, array $payload): array|string
+    {
+        $sent = \is_array($payload['fields'] ?? null) ? $payload['fields'] : [];
+        $enabled = ContactFields::enabled(StringUtil::deserialize($module->brevo_fields, true));
+        $required = StringUtil::deserialize($module->brevo_fields_required, true);
+        $values = [];
+
+        foreach ($enabled as $key) {
+            $value = ContactFields::clean($sent[$key] ?? '');
+
+            if ('' === $value) {
+                if (\in_array($key, $required, true)) {
+                    return 'fields';
+                }
+
+                continue;
+            }
+
+            if (ContactFields::isPhone($key)) {
+                $value = ContactFields::phone($value);
+
+                if ('' === $value) {
+                    return 'phone';
+                }
+            }
+
+            $values[$key] = $value;
+        }
+
+        return $values;
+    }
+
+    /**
+     * @param array<string, string> $values
+     *
+     * @return array<string, string>
+     */
+    private function attributes(ModuleModel $module, string $apiKey, array $values): array
+    {
+        if ([] === $values) {
+            return [];
+        }
+
+        $first = (string) $module->brevo_attr_firstname;
+        $last = (string) $module->brevo_attr_lastname;
+        // The account's attributes are only needed to find the automatic name attributes.
+        $automatic = (isset($values['firstname']) && '' === trim($first)) || (isset($values['lastname']) && '' === trim($last));
+
+        return ContactFields::attributes($values, $first, $last, $automatic ? $this->brevo->getAttributes($apiKey) : []);
+    }
+
+    /** Empty field (module saved before 1.1.0) = default; 0 = no limit. */
+    private function limit(mixed $value, int $default): int
+    {
+        return null === $value || '' === $value ? $default : max(0, (int) $value);
+    }
+
+    /** Sent from another website (the browser says so). */
+    private function foreign(Request $request): bool
+    {
+        if ('cross-site' === $request->headers->get('Sec-Fetch-Site')) {
+            return true;
+        }
+
+        $origin = (string) $request->headers->get('Origin');
+
+        return '' !== $origin && 'null' !== $origin && parse_url($origin, PHP_URL_HOST) !== $request->getHost();
+    }
+
+    /** No user agent, or the one of a script or automated browser. */
+    private function automated(Request $request): bool
+    {
+        $agent = trim((string) $request->headers->get('User-Agent'));
+
+        return '' === $agent || 1 === preg_match(self::AUTOMATED, $agent);
     }
 
     /** System › System log: the visitor was not subscribed (without the visitor's address). */

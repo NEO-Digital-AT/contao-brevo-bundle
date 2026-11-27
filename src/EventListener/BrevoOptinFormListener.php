@@ -13,6 +13,7 @@ use Contao\PageModel;
 use Contao\StringUtil;
 use Neo\BrevoNewsletterBundle\Brevo\ApiKeyResolver;
 use Neo\BrevoNewsletterBundle\Brevo\BrevoClient;
+use Neo\BrevoNewsletterBundle\Subscription\SignupGuard;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -24,6 +25,10 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * Errors go to the application log and, as errors, to Contao's system log
  * (System › System log) — they NEVER disturb the rest of the form processing
  * (e.g. sending the e-mail of a contact request).
+ *
+ * Spam protection: one confirmation e-mail per address in 24 hours (SignupGuard),
+ * like the front-end module. Against bots, protect the form itself with Contao's
+ * ALTCHA field (form generator › field type "ALTCHA").
  */
 #[AsHook('processFormData')]
 final class BrevoOptinFormListener
@@ -35,6 +40,7 @@ final class BrevoOptinFormListener
         private readonly ContaoFramework $framework,
         private readonly LoggerInterface|null $logger = null,
         private readonly LoggerInterface|null $contaoErrorLog = null,
+        private readonly SignupGuard|null $guard = null,
     ) {
     }
 
@@ -79,6 +85,11 @@ final class BrevoOptinFormListener
             return;
         }
 
+        // A confirmation e-mail went to this address within 24 hours: none again.
+        if (null !== $this->guard && $this->guard->addressSeen($email)) {
+            return;
+        }
+
         $lists = array_values(array_filter(array_map('intval', StringUtil::deserialize($field->brevo_lists, true))));
         $templateId = (int) $field->brevo_doi_template;
         $redirectPage = $this->framework->getAdapter(PageModel::class)->findByPk((int) $field->brevo_redirect);
@@ -117,6 +128,10 @@ final class BrevoOptinFormListener
 
         if (!$ok && [] !== $attributes) {
             $ok = $this->brevo->createDoiContact($apiKey, $email, $lists, $templateId, $redirect);
+        }
+
+        if ($ok) {
+            $this->guard?->record($email);
         }
 
         if (!$ok) {

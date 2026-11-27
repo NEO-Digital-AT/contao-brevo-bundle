@@ -22,6 +22,15 @@ final class ModuleCallbacks
         'brevo_error_choose' => 'error_choose',
         'brevo_error_limit' => 'error_limit',
         'brevo_error_generic' => 'error_generic',
+        'brevo_error_fields' => 'error_fields',
+        'brevo_error_phone' => 'error_phone',
+        'brevo_error_repeat' => 'error_repeat',
+        'brevo_error_verify' => 'error_verify',
+        'brevo_label_firstname' => 'label_firstname',
+        'brevo_label_lastname' => 'label_lastname',
+        'brevo_label_sms' => 'label_sms',
+        'brevo_label_landline' => 'label_landline',
+        'brevo_label_job_title' => 'label_job_title',
     ];
 
     public function __construct(private readonly TranslatorInterface $translator)

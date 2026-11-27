@@ -13,7 +13,9 @@ Free to use with a credit in the legal notice — see [License](#license).
 - One API key for the installation on **Access keys and licences**, stored encrypted; the environment variable `BREVO_API_KEY` as fallback.
 - Lists and double opt-in templates chosen live from the Brevo account; display names per list.
 - Mode *Fixed* (all chosen lists) or *Choice* (visitors pick, single or multiple choice).
-- Limit of 8 attempts per minute, hidden field against spam bots, required consent checkbox, status messages for screen readers.
+- Optional additional fields, each optional or required: first and last name, mobile number, landline, job title (Brevo's standard attributes).
+- Built-in spam protection, always on: an invisible proof-of-work task (ALTCHA method) that the browser solves, a hidden field, refusal of requests from other websites and scripts, one confirmation e-mail per address in 24 hours, limits per visitor and a limit per hour and day for all visitors together (against "subscription bombing").
+- Required consent checkbox, status messages for screen readers.
 - Every visible text editable per module, defaults in eleven languages; back end in eleven languages.
 
 ## Requirements
@@ -83,7 +85,9 @@ Kostenlos mit Nennung im Impressum, siehe [Lizenz](#lizenz).
 - Ein API-Schlüssel für die Installation unter **Zugänge und Lizenzen**, verschlüsselt gespeichert; die Umgebungsvariable `BREVO_API_KEY` als Rückfall.
 - Listen und Double-Opt-in-Vorlagen live aus dem Brevo-Konto gewählt; Anzeigenamen je Liste.
 - Modus *Fix* (alle gewählten Listen) oder *Auswahl* (Besucher wählen, Einfach- oder Mehrfachauswahl).
-- Grenze von 8 Versuchen je Minute, verstecktes Feld gegen Spam-Bots, Pflicht-Häkchen für die Einwilligung, Statusmeldungen für Screenreader.
+- Zusätzliche Felder nach Wahl, jeweils freiwillig oder Pflicht: Vor- und Nachname, Mobilnummer, Festnetz, Position (Standard-Attribute von Brevo).
+- Eingebauter Spamschutz, immer aktiv: eine unsichtbare Rechenaufgabe (ALTCHA-Verfahren), die der Browser löst, ein verstecktes Feld, Ablehnung von Anfragen fremder Websites und von Skripten, eine Bestätigungsmail pro Adresse in 24 Stunden, Grenzen pro Besucher und eine Grenze pro Stunde und Tag für alle Besucher zusammen (gegen „Subscription Bombing“).
+- Pflicht-Häkchen für die Einwilligung, Statusmeldungen für Screenreader.
 - Jeder sichtbare Text je Modul änderbar, Vorgaben in elf Sprachen; Backend in elf Sprachen.
 
 ## Voraussetzungen

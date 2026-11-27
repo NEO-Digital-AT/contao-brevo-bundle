@@ -33,6 +33,16 @@ services:
     Neo\BrevoNewsletterBundle\Brevo\ApiKeyResolver:
         public: true
 
+    # Spam protection of the sign-up: proof-of-work task and limits, signed and
+    # hashed with the application secret.
+    Neo\BrevoNewsletterBundle\Subscription\ProofOfWork:
+        arguments:
+            $secret: '%kernel.secret%'
+
+    Neo\BrevoNewsletterBundle\Subscription\SignupGuard:
+        arguments:
+            $secret: '%kernel.secret%'
+
     # Failed sign-ups also go to Contao's system log (System › System log), channel contao.error.
     Neo\BrevoNewsletterBundle\Controller\SubscribeController:
         arguments:

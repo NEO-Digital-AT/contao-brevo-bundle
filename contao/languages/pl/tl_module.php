@@ -42,3 +42,34 @@ $GLOBALS['TL_LANG']['tl_module']['licence_legend'] = 'Licencja';
 $GLOBALS['TL_LANG']['tl_module']['brevo_locked_no_key'] = 'Brak jeszcze klucza API Brevo w „Dostępy i licencje”: nie można wczytać list i szablonów konta. Wcześniej zapisany wybór zostaje zachowany.';
 $GLOBALS['TL_LANG']['tl_module']['brevo_locked_no_answer'] = 'Brevo nie zwraca list dla zapisanego klucza (błędny klucz lub Brevo nieosiągalne): nie ma czego wybrać. Wcześniej zapisany wybór zostaje zachowany.';
 $GLOBALS['TL_LANG']['tl_module']['brevo_locked_choice'] = 'Działa tylko w trybie „Wybór”.';
+
+// Since 1.1.0: additional fields, field labels, messages and spam protection.
+$GLOBALS['TL_LANG']['tl_module']['text_legend'] = 'Tekst';
+$GLOBALS['TL_LANG']['tl_module']['fields_legend'] = 'Dodatkowe pola';
+$GLOBALS['TL_LANG']['tl_module']['labels_legend'] = 'Etykiety pól';
+$GLOBALS['TL_LANG']['tl_module']['spam_legend'] = 'Ochrona przed spamem';
+$GLOBALS['TL_LANG']['tl_module']['brevo_fields'] = ['Dodatkowe pola', 'Zapisywane przy kontakcie w Brevo.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_fields_required'] = ['Pola wymagane', 'Bez tych danych zapis zostanie odrzucony. Liczą się tylko wyświetlane pola.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_fields_options'] = [
+    'firstname' => 'Imię',
+    'lastname' => 'Nazwisko',
+    'sms' => 'Numer komórkowy (Brevo: SMS)',
+    'landline' => 'Telefon stacjonarny (Brevo: LANDLINE_NUMBER)',
+    'job_title' => 'Stanowisko (Brevo: JOB_TITLE)',
+];
+$GLOBALS['TL_LANG']['tl_module']['brevo_attr_firstname'] = ['Atrybut Brevo dla imienia', 'Automatycznie = domyślny atrybut konta (FIRSTNAME, VORNAME, PRENOM …).'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_attr_lastname'] = ['Atrybut Brevo dla nazwiska', 'Automatycznie = domyślny atrybut konta (LASTNAME, NACHNAME, NOM …).'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_attr_auto'] = 'Automatycznie';
+$GLOBALS['TL_LANG']['tl_module']['brevo_label_firstname'] = ['Etykieta: imię', 'Puste = tekst domyślny (pokazany na szaro), na stronie w jej języku.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_label_lastname'] = ['Etykieta: nazwisko', 'Puste = tekst domyślny (pokazany na szaro), na stronie w jej języku.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_label_sms'] = ['Etykieta: numer komórkowy', 'Puste = tekst domyślny (pokazany na szaro), na stronie w jej języku.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_label_landline'] = ['Etykieta: telefon stacjonarny', 'Puste = tekst domyślny (pokazany na szaro), na stronie w jej języku.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_label_job_title'] = ['Etykieta: stanowisko', 'Puste = tekst domyślny (pokazany na szaro), na stronie w jej języku.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_error_fields'] = ['Komunikat: puste pole wymagane', 'Puste = tekst domyślny (pokazany na szaro), na stronie w jej języku.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_error_phone'] = ['Komunikat: numer nie w formacie międzynarodowym', 'Puste = tekst domyślny (pokazany na szaro), na stronie w jej języku.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_error_repeat'] = ['Komunikat: adres już zapisany', 'Puste = tekst domyślny (pokazany na szaro), na stronie w jej języku.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_error_verify'] = ['Komunikat: kontrola bezpieczeństwa nieudana', 'Puste = tekst domyślny (pokazany na szaro), na stronie w jej języku.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_limit_hour'] = ['Zapisy na godzinę', 'E-maile z potwierdzeniem na godzinę dla wszystkich odwiedzających łącznie. 0 = bez limitu.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_limit_day'] = ['Zapisy na dzień', 'E-maile z potwierdzeniem na dzień dla wszystkich odwiedzających łącznie. 0 = bez limitu.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_spam_text'] = 'Wbudowana i zawsze włączona: niewidoczne zadanie, które przeglądarka odwiedzającego rozwiązuje podczas wpisywania adresu (metoda ALTCHA, bez plików cookie, odwiedzający niczego nie klika), ukryte pole przeciw botom, odrzucanie żądań z innych stron i ze skryptów, jeden e-mail z potwierdzeniem na adres w ciągu 24 godzin, najwyżej 2 zapisy na odwiedzającego na godzinę i 3 dziennie. Poniżej: limit dla wszystkich odwiedzających łącznie. Zatrzymuje boty zmieniające adres IP; po jego osiągnięciu informuje o tym dziennik systemowy.';
+$GLOBALS['TL_LANG']['tl_module']['brevo_locked_field'] = 'Używane tylko wtedy, gdy to pole nazwy jest wyświetlane.';

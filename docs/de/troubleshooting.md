@@ -3,7 +3,7 @@ titel: Fehlersuche
 kurzfassung: Häufige Probleme mit Contao Brevo Newsletter – keine Listen im Backend, Anmeldung scheitert, keine Bestätigungs-E-Mail, Formular ohne Gestaltung, fehlende Rechte – mit Ursache und Lösung.
 zielgruppe: betrieb
 sprache: de
-stand: 2026-11-12
+stand: 2026-11-27
 ---
 
 # Fehlersuche
@@ -26,7 +26,7 @@ immer fehlende Rechte; siehe [Rechte](permissions.md).
 | Was man sieht | Warum | Was zu tun ist |
 | --- | --- | --- |
 | „Noch kein Brevo-API-Schlüssel hinterlegt. …“ oben im Modul oder Formularfeld | Kein Schlüssel unter *Zugänge und Lizenzen* und kein `BREVO_API_KEY` | Den Schlüssel eintragen ([Einrichtung](setup.md#2-api-schlüssel-in-contao)). |
-| **Verteilerliste(n)** und **DOI-Vorlage** ausgegraut: „Brevo liefert zum gespeicherten Schlüssel keine Listen …“ | Der Schlüssel ist falsch oder widerrufen, das Konto hat keine Liste, oder der Server erreicht `api.brevo.com` nicht | Schlüssel in Brevo und die ausgehende Verbindung prüfen; eine Liste anlegen. |
+| **Verteilerliste(n)** und **DOI-Vorlage** ausgegraut: „Brevo liefert zum gespeicherten Schlüssel keine Listen …“ | Der Schlüssel ist falsch oder widerrufen, das Konto hat keine Liste, oder der Server erreicht `api.brevo.com` nicht | Schlüssel in Brevo und die ausgehende Verbindung prüfen; eine Liste anlegen. Der Schlüssel beginnt mit `xkeysib-`; ein SMTP-Schlüssel (`xsmtpsib-`) geht nicht. Seit 1.1.0 geht auch der „MCP-Server-API-Schlüssel“ (langer Text, beginnt mit `eyJ`): Die Erweiterung holt den Schlüssel daraus. |
 | Eine neue Liste oder Vorlage fehlt in der Auswahl | Das Backend behält Listen und Vorlagen eine Stunde | Bis zu einer Stunde warten. |
 | Eine Liste fehlt, obwohl es sie gibt | Angeboten werden nur die 50 zuletzt angelegten Listen | Ungenutzte Listen in Brevo löschen oder die Liste neu anlegen. |
 | Eine Vorlage ist mit „– inactive“ markiert | Die Vorlage ist in Brevo nicht aktiv | In Brevo aktivieren. |
@@ -43,10 +43,16 @@ immer fehlende Rechte; siehe [Rechte](permissions.md).
 | System-Log: Brevo lehnt den Absender ab | Der Absender der Vorlage ist in Brevo nicht bestätigt | Den Absender in Brevo bestätigen. |
 | System-Log: Brevo lehnt die Weiterleitungsadresse ab | Die Bestätigungsseite hat keine gültige öffentliche Adresse | Eine veröffentlichte Seite wählen; die Domain des Startpunkts prüfen. |
 | Keine Bestätigungs-E-Mail, obwohl die Erfolgsmeldung kam | Brevo hat die Anfrage angenommen; die E-Mail liegt im Spam, oder die Adresse ist schon ein bestätigter Kontakt | Spam prüfen; den Kontakt in Brevo prüfen. |
-| „Zu viele Versuche. …“ | Mehr als 8 Versuche innerhalb einer Minute von derselben Verbindung | Eine Minute warten. |
+| „Zu viele Versuche. …“ | Eine Grenze des Spamschutzes: 5 Versuche in 10 Minuten, 2 Anmeldungen pro Stunde oder 3 pro Tag von derselben Verbindung, oder **Anmeldungen pro Stunde** / **pro Tag** des Moduls für alle Besucher zusammen | Warten. Werden regelmäßig echte Besucher abgewiesen, die Grenzen im Modul anheben ([Spamschutz](usage.md#spamschutz)). |
+| System-Log: „the limit of … sign-ups an hour (a day) is reached …“ | Mehr Anmeldungen, als das Modul erlaubt; typisch für Bots, die fremde Adressen eintragen | Nichts eilt, die Grenze hält. Die letzten Bestätigungsmails in Brevo ansehen (**Transaktional › Logs**, Tag `optin`). |
+| „An diese Adresse ist bereits eine Bestätigungsmail unterwegs. …“ | Dieselbe Adresse wurde in den letzten 24 Stunden angemeldet | Die erste Mail suchen (auch im Spam-Ordner); mit einer anderen Adresse testen. |
+| „Die Sicherheitsprüfung hat nicht geklappt. …“ | Die unsichtbare Aufgabe wurde nicht gelöst: Die Seite war länger als eine Stunde offen, ein Skript-Blocker hat `/api/brevo/challenge` gesperrt, die Seite läuft nicht über HTTPS (Browser bieten die nötigen Funktionen nur dort), oder ein sehr alter Browser | Seite neu laden; HTTPS verwenden; `/api/brevo/challenge` in Firewall oder Blocker freigeben. |
+| „Bitte aktivieren Sie JavaScript, um sich anzumelden.“ | JavaScript ist aus; der Spamschutz braucht es | So gewollt. |
+| „Bitte geben Sie die Telefonnummer im internationalen Format ein …“ | Eine Mobil- oder Festnetznummer ohne `+` (oder `00`) und Ländervorwahl | Mit `+`, Ländervorwahl und Nummer eingeben. |
+| „Bitte füllen Sie alle Pflichtfelder aus.“ | Ein zusätzliches Pflichtfeld ist leer | Ausfüllen, oder unter **Pflichtfelder** abhaken. |
+| System-Log: „Brevo refused the attributes …; the visitor is signed up without them“ | Dem Konto fehlt das Attribut, oder die Mobilnummer gehört in Brevo schon zu einem anderen Kontakt | Das Attribut in Brevo anlegen oder unter **Brevo-Attribut für den Vornamen / Nachnamen** wählen; eine doppelte Mobilnummer bleibt ohne Nummer. |
 | „Bitte geben Sie eine gültige E-Mail-Adresse ein.“, obwohl die Adresse stimmt | Das Einwilligungs-Häkchen war nicht gesetzt | Das Häkchen setzen. |
 | Das Formular hat keine Gestaltung und lädt beim Absenden die Seite neu | Skript und Stylesheet fehlen: Das Modul steht per Insert-Tag oder in einem eingefügten Artikel | Mit dem Inhaltselement **Modul** oder im Seitenlayout einbinden ([Anpassen](customising.md#wie-skript-und-stylesheet-geladen-werden)). |
-| Nach dem Absenden ohne JavaScript erscheint keine Meldung | Ohne JavaScript zeigt die Seite keine Meldung; das Ergebnis steht in der Adresse (`?nl=…`) | So vorgesehen. |
 | Eine Auswahl der Verteiler zeigt `#12` statt eines Namens | Brevo hat den Namen der Liste nicht geliefert | Unter **Anzeigenamen (optional)** einen Namen eintragen. |
 | Das Formularfeld meldet niemanden an | Die Checkbox war nicht angekreuzt; oder **E-Mail-Feld** zeigt auf ein Feld ohne gültige Adresse; oder das Formularfeld ist nicht vollständig | Die Feld-Zuordnung prüfen; das **System › System-Log** nennt eine fehlende Einstellung oder die Meldung von Brevo. |
 | Vor- und Nachname fehlen in Brevo | Das Konto hat keine Attribute `VORNAME` und `NACHNAME`; die Erweiterung meldet dann ohne Namen an | Die Attribute in Brevo anlegen. |

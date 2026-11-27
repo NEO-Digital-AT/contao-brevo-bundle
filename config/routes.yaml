@@ -4,3 +4,11 @@ neo_brevo_subscribe:
     defaults:
         _controller: Neo\BrevoNewsletterBundle\Controller\SubscribeController::subscribe
         _scope: frontend
+
+# Spam protection: a new proof-of-work task for the sign-up form (never cached).
+neo_brevo_challenge:
+    path: /api/brevo/challenge
+    methods: [GET]
+    defaults:
+        _controller: Neo\BrevoNewsletterBundle\Controller\SubscribeController::challenge
+        _scope: frontend

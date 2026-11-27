@@ -1,7 +1,7 @@
 {
     "name": "neo-digital/contao-brevo-bundle",
     "type": "contao-bundle",
-    "description": "Brevo newsletter sign-up for Contao 5: a front-end module and a form-generator opt-in field with Brevo double opt-in, live list selection, encrypted API key, rate limit and honeypot. Ships a neutral design that each site themes itself.",
+    "description": "Brevo newsletter sign-up for Contao 5: a front-end module and a form-generator opt-in field with Brevo double opt-in, live list selection, optional name and phone fields, encrypted API key and built-in spam protection (proof of work, limits per address, visitor and hour). Ships a neutral design that each site themes itself.",
     "keywords": [
         "contao",
         "contao-bundle",
@@ -71,7 +71,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-main": "1.0.x-dev"
+            "dev-main": "1.1.x-dev"
         },
         "contao-manager-plugin": "Neo\\BrevoNewsletterBundle\\ContaoManager\\Plugin"
     }

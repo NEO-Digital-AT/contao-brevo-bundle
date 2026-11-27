@@ -10,11 +10,11 @@ use Symfony\Component\Cache\Adapter\ArrayAdapter;
 
 final class SubscribeRateLimiterTest extends TestCase
 {
-    public function testEightSignUpsAMinutePerClient(): void
+    public function testFiveAttemptsInTenMinutesPerClient(): void
     {
         $limiter = new SubscribeRateLimiter(new ArrayAdapter());
 
-        for ($i = 1; $i <= 8; ++$i) {
+        for ($i = 1; $i <= 5; ++$i) {
             $this->assertTrue($limiter->accept('nl-192.0.2.1'), 'attempt '.$i);
         }
 

@@ -42,3 +42,34 @@ $GLOBALS['TL_LANG']['tl_module']['licence_legend'] = 'Licence';
 $GLOBALS['TL_LANG']['tl_module']['brevo_locked_no_key'] = 'No Brevo API key on “Access keys and licences” yet: the lists and templates of the account cannot be loaded. A choice stored earlier is kept.';
 $GLOBALS['TL_LANG']['tl_module']['brevo_locked_no_answer'] = 'Brevo gives no lists for the stored key (key wrong or Brevo not reachable): there is nothing to choose. A choice stored earlier is kept.';
 $GLOBALS['TL_LANG']['tl_module']['brevo_locked_choice'] = 'Only used with the mode “Choice”.';
+
+// Since 1.1.0: additional fields, field labels, messages and spam protection.
+$GLOBALS['TL_LANG']['tl_module']['text_legend'] = 'Text';
+$GLOBALS['TL_LANG']['tl_module']['fields_legend'] = 'Additional fields';
+$GLOBALS['TL_LANG']['tl_module']['labels_legend'] = 'Field labels';
+$GLOBALS['TL_LANG']['tl_module']['spam_legend'] = 'Spam protection';
+$GLOBALS['TL_LANG']['tl_module']['brevo_fields'] = ['Additional fields', 'Stored with the contact in Brevo.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_fields_required'] = ['Required fields', 'Without these the sign-up is refused. Only fields that are shown count.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_fields_options'] = [
+    'firstname' => 'First name',
+    'lastname' => 'Last name',
+    'sms' => 'Mobile number (Brevo: SMS)',
+    'landline' => 'Landline (Brevo: LANDLINE_NUMBER)',
+    'job_title' => 'Job title (Brevo: JOB_TITLE)',
+];
+$GLOBALS['TL_LANG']['tl_module']['brevo_attr_firstname'] = ['Brevo attribute for the first name', 'Automatic = the default attribute of the account (FIRSTNAME, VORNAME, PRENOM …).'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_attr_lastname'] = ['Brevo attribute for the last name', 'Automatic = the default attribute of the account (LASTNAME, NACHNAME, NOM …).'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_attr_auto'] = 'Automatic';
+$GLOBALS['TL_LANG']['tl_module']['brevo_label_firstname'] = ['Label: first name', 'Empty = default (shown in grey), on the page in its language.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_label_lastname'] = ['Label: last name', 'Empty = default (shown in grey), on the page in its language.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_label_sms'] = ['Label: mobile number', 'Empty = default (shown in grey), on the page in its language.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_label_landline'] = ['Label: landline', 'Empty = default (shown in grey), on the page in its language.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_label_job_title'] = ['Label: job title', 'Empty = default (shown in grey), on the page in its language.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_error_fields'] = ['Message: required field empty', 'Empty = default (shown in grey), on the page in its language.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_error_phone'] = ['Message: phone number not international', 'Empty = default (shown in grey), on the page in its language.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_error_repeat'] = ['Message: address already signed up', 'Empty = default (shown in grey), on the page in its language.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_error_verify'] = ['Message: security check failed', 'Empty = default (shown in grey), on the page in its language.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_limit_hour'] = ['Sign-ups per hour', 'Confirmation e-mails an hour for all visitors together. 0 = no limit.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_limit_day'] = ['Sign-ups per day', 'Confirmation e-mails a day for all visitors together. 0 = no limit.'];
+$GLOBALS['TL_LANG']['tl_module']['brevo_spam_text'] = 'Built in and always on: an invisible task that the visitor’s browser solves while the address is typed (ALTCHA method, no cookies, nothing for the visitor to click), a hidden field against bots, refusal of requests from other websites and from scripts, one confirmation e-mail per address in 24 hours, at most 2 sign-ups per visitor an hour and 3 a day. Below: the limit for all visitors together. It stops bots that change their IP address; when it is reached, the system log says so.';
+$GLOBALS['TL_LANG']['tl_module']['brevo_locked_field'] = 'Only used when this name field is shown.';
